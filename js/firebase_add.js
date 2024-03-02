@@ -1,3 +1,0 @@
-peliculas.forEach(element => {
-    
-});

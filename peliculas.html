@@ -52,26 +52,6 @@
 				<a href="http://www.cinestar.com.pe/cinefilo_star/"><img src="img/varios/cinefilo-star.jpg"/></a>
 			</div>
 			<div class="contenido-interno" id="contenido-interno">
-				
-				<br/><h1>Cartelera</h1><br/>
-				<div class="contenido-pelicula">
-					<div class="datos-pelicula">
-						<h2>Locos de Amor 2 (+14) (HD - Doblada)</h2><br/>
-						<p>¡Vuelve la comedia musical del año! Un hombre descorazonado que empieza a salir con una conductora que da consejos de amor en la radio. Una mujer desesperada por ser mamá ...</p>
-						<br/>
-                       	<div class="boton-pelicula"> 
-                       		<a href="http://www.cinestar.com.pe/cartelera/pelicula/Locos-de-Amor-2" >
-                       			<img src="img/varios/btn-mas-info.jpg" width="120" height="30" alt="Ver info"/>
-                       		</a>
-               			</div>
-               			<div class="boton-pelicula"> 
-               				<a href="https://www.youtube.com/v/v3fspveODBI" target=_blank  onclick="return hs.htmlExpand(this, { objectType: 'iframe' } )" >
-               					<img src="img/varios/btn-trailer.jpg" width="120" height="30" alt="Ver trailer"/>
-               				</a>
-                        </div> 
-					</div>
-					<img src="img/pelicula/10.jpg" width="160" height="226"/><br/><br/>
-				</div>
 
 			</div>
 		</div>
@@ -83,5 +63,56 @@
 			</div>
 		</footer>
 
+		<script type="module">
+			import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+			import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+			const firebaseConfig = {
+				apiKey: "AIzaSyBE50aDds1nefJz1ViiYi1dudL4NhWF5tE",
+				authDomain: "cinestar-fea93.firebaseapp.com",
+				projectId: "cinestar-fea93",
+				storageBucket: "cinestar-fea93.appspot.com",
+				messagingSenderId: "1075650414743",
+				appId: "1:1075650414743:web:9a25ba4e24fd3bcacd01d2"
+			};
+
+			// Initialize Firebase
+			const app = initializeApp(firebaseConfig);
+			const db = getFirestore(app);
+
+			const getPeliculas = async()=> {
+				const id = new URLSearchParams( window.location.search ).get('id')
+				id = id == 'cartelera' ? 1 : id == 'estrenos' ? 2 : 0
+				const consulta = query( collection(db, 'peliculas'), where('idEstado', '==', id ), orderBy('id') )
+				const peliculas = await getDocs( consulta )
+				let html = '<br/><h1>Cartelera</h1><br/>'
+				peliculas.forEach((doc) => {
+					let pelicula = doc.data()
+					html += `
+						<div class="contenido-pelicula">
+							<div class="datos-pelicula">
+								<h2>${pelicula.Titulo}</h2><br/>
+								<p>${pelicula.Sinopsis}</p>
+								<br/>
+								<div class="boton-pelicula"> 
+									<a href="pelicula.html?id=${pelicula.id}" >
+										<img src="img/varios/btn-mas-info.jpg" width="120" height="30" alt="Ver info"/>
+									</a>
+								</div>
+								<div class="boton-pelicula"> 
+									<a href="https://www.youtube.com/v/${pelicula.Link}" target=_blank  onclick="return hs.htmlExpand(this, { objectType: 'iframe' } )" >
+										<img src="img/varios/btn-trailer.jpg" width="120" height="30" alt="Ver trailer"/>
+									</a>
+								</div> 
+							</div>
+							<img src="img/pelicula/${pelicula.id}.jpg" width="160" height="226"/><br/><br/>
+						</div>
+					`
+				});
+				document.getElementById('contenido-interno').innerHTML = html
+			}
+			getPeliculas()
+		</script>
+		
 	</body>
 </html>
