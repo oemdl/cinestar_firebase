@@ -53,41 +53,6 @@
 			</div>
 			<div class="contenido-interno" id="contenido-interno">
 
-				<br/><h1>Cartelera</h1><br/>
-				<div class="contenido-pelicula">
-					<div class="datos-pelicula">
-						<h2>Jumanji: En la Selva (Todo Público)</h2>
-						<p>Remake de la película homónima de 1995 adaptado a la época actual, en donde cuatro adolescentes se introducen en un nueva aventura a partir de “Jumanji”, un videojuego que sirve como un portal a través del espacio-tiempo. Absorbidos por el mundo de Jumanji, este juego no se puede abandonar hasta que acaba la partida</p>
-						<br/>
-						<div class="tabla">
-							<div class="fila">
-								<div class="celda-titulo">Título Original :</div>
-								<div class="celda">Jumanji: En la Selva (Todo Público)</div>
-							</div>
-							<div class="fila">
-								<div class="celda-titulo">Estreno :</div>
-								<div class="celda">11 de Enero del 2018</div>
-							</div>
-							<div class="fila">
-								<div class="celda-titulo">Género :</div>
-								<div class="celda">Aventura / Acción</div>
-							</div>
-							<div class="fila">
-								<div class="celda-titulo">Director :</div>
-								<div class="celda">Jake Kasdan</div>
-							</div>
-							<div class="fila">
-								<div class="celda-titulo">Reparto :</div>
-								<div class="celda">Dwayne Johnson, Kevin Hart, Jack Black, Karen Gillan</div>
-							</div>
-						</div>
-					</div>
-					<img src="img/pelicula/1.jpg" width="160" height="226"><br/><br/>
-				</div>
-				<div class="pelicula-video">
-					<embed src="https://www.youtube.com/v/6maujJFcuxAfs" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="580" height="400">
-				</div>
-
 			</div>
 		</div>
 		<div class="clearbox"><br/></div>
@@ -98,5 +63,70 @@
 			</div>
 		</footer>
 		
+		<script type="module">
+			import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+			import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+			const firebaseConfig = {
+				apiKey: "AIzaSyBE50aDds1nefJz1ViiYi1dudL4NhWF5tE",
+				authDomain: "cinestar-fea93.firebaseapp.com",
+				projectId: "cinestar-fea93",
+				storageBucket: "cinestar-fea93.appspot.com",
+				messagingSenderId: "1075650414743",
+				appId: "1:1075650414743:web:9a25ba4e24fd3bcacd01d2"
+			};
+
+			// Initialize Firebase
+			const app = initializeApp(firebaseConfig);
+			const db = getFirestore(app);
+
+			const getPelicula = async()=> {
+				let id = new URLSearchParams( window.location.search ).get('id')
+				const peliculas = await getDocs( query( collection(db, 'peliculas'), where('id', '==', `${id}` ) ) )
+				let pelicula = 1
+				peliculas.forEach((doc) => {
+					pelicula = doc.data()
+				});
+				let html = `
+					<br/><h1>Cartelera</h1><br/>
+					<div class="contenido-pelicula">
+						<div class="datos-pelicula">
+							<h2>${pelicula.Titulo}</h2>
+							<p>${pelicula.Sinopsis}</p>
+							<br/>
+							<div class="tabla">
+								<div class="fila">
+									<div class="celda-titulo">Título Original :</div>
+									<div class="celda">${pelicula.Titulo}</div>
+								</div>
+								<div class="fila">
+									<div class="celda-titulo">Estreno :</div>
+									<div class="celda">${pelicula.FechaEstrenoss}</div>
+								</div>
+								<div class="fila">
+									<div class="celda-titulo">Género :</div>
+									<div class="celda">${pelicula.Geneross}</div>
+								</div>
+								<div class="fila">
+									<div class="celda-titulo">Director :</div>
+									<div class="celda">${pelicula.Director}</div>
+								</div>
+								<div class="fila">
+									<div class="celda-titulo">Reparto :</div>
+									<div class="celda">${pelicula.Reparto}</div>
+								</div>
+							</div>
+						</div>
+						<img src="img/pelicula/${pelicula.id}.jpg" width="160" height="226"><br/><br/>
+					</div>
+					<div class="pelicula-video">
+						<embed src="https://www.youtube.com/v/${pelicula.Link}" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="580" height="400">
+					</div>
+					`
+				document.getElementById('contenido-interno').innerHTML = html
+			}
+			getPelicula()
+		</script>
+
 	</body>
 </html>
