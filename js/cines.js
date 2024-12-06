@@ -1,6 +1,5 @@
 import { getCines } from './firebase.js'
 
-const getCiness = async ()=> {
     const cines = await getCines()
     let html = `<br/><h1>Nuestros Cines</h1><br/>`
     cines.forEach(item => {
@@ -20,9 +19,6 @@ const getCiness = async ()=> {
         `
     })
     document.getElementById('contenido-interno').innerHTML = html
-}
-
-getCiness()
 
 /*
 window.addEventListener('DOMContentLoaded', async()=> {
