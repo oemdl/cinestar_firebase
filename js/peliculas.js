@@ -1,7 +1,8 @@
 import { getPeliculas } from "./firebase.js";
 
-const getPeliculass = async () =>{
-	const peliculas = await getPeliculas()
+	let id = new URLSearchParams( window.location.search ).get('idx')
+	id = id == 'cartelera' ? 1 : id == 'estrenos' ? 2 : 3
+	const peliculas = await getPeliculas(id)
 	let html = '<br/><h1>Cartelera</h1><br/>'
 	peliculas.forEach( doc => {
 		let pelicula = doc.data()
@@ -27,6 +28,3 @@ const getPeliculass = async () =>{
 		`
 	});
 	document.getElementById('contenido-interno').innerHTML = html
-}
-
-getPeliculass()

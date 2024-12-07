@@ -1,6 +1,5 @@
-import { getCines } from './firebase.js'
+import { cines } from './firebase.js'
 
-    const cines = await getCines()
     let html = `<br/><h1>Nuestros Cines</h1><br/>`
     cines.forEach(item => {
         let cine = item.data()

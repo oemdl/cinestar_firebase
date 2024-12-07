@@ -62,71 +62,7 @@
 				<p>Copyright © 2016 ® Multicines CINESTAR - Todos los Derechos Reservados</p>
 			</div>
 		</footer>
-		
-		<script type="module">
-			import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-			import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-			const firebaseConfig = {
-				apiKey: "AIzaSyBE50aDds1nefJz1ViiYi1dudL4NhWF5tE",
-				authDomain: "cinestar-fea93.firebaseapp.com",
-				projectId: "cinestar-fea93",
-				storageBucket: "cinestar-fea93.appspot.com",
-				messagingSenderId: "1075650414743",
-				appId: "1:1075650414743:web:9a25ba4e24fd3bcacd01d2"
-			};
-
-			// Initialize Firebase
-			const app = initializeApp(firebaseConfig);
-			const db = getFirestore(app);
-
-			const getPelicula = async()=> {
-				let id = new URLSearchParams( window.location.search ).get('id')
-				const peliculas = await getDocs( query( collection(db, 'peliculas'), where('id', '==', `${id}` ) ) )
-				let pelicula = 1
-				peliculas.forEach((doc) => {
-					pelicula = doc.data()
-				});
-				let html = `
-					<br/><h1>Cartelera</h1><br/>
-					<div class="contenido-pelicula">
-						<div class="datos-pelicula">
-							<h2>${pelicula.Titulo}</h2>
-							<p>${pelicula.Sinopsis}</p>
-							<br/>
-							<div class="tabla">
-								<div class="fila">
-									<div class="celda-titulo">Título Original :</div>
-									<div class="celda">${pelicula.Titulo}</div>
-								</div>
-								<div class="fila">
-									<div class="celda-titulo">Estreno :</div>
-									<div class="celda">${pelicula.FechaEstrenoss}</div>
-								</div>
-								<div class="fila">
-									<div class="celda-titulo">Género :</div>
-									<div class="celda">${pelicula.Geneross}</div>
-								</div>
-								<div class="fila">
-									<div class="celda-titulo">Director :</div>
-									<div class="celda">${pelicula.Director}</div>
-								</div>
-								<div class="fila">
-									<div class="celda-titulo">Reparto :</div>
-									<div class="celda">${pelicula.Reparto}</div>
-								</div>
-							</div>
-						</div>
-						<img src="img/pelicula/${pelicula.id}.jpg" width="160" height="226"><br/><br/>
-					</div>
-					<div class="pelicula-video">
-						<embed src="https://www.youtube.com/v/${pelicula.Link}" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="580" height="400">
-					</div>
-					`
-				document.getElementById('contenido-interno').innerHTML = html
-			}
-			getPelicula()
-		</script>
-
+		<script type="module" src="js/pelicula.js"></script>
 	</body>
 </html>
